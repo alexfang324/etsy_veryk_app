@@ -202,6 +202,9 @@ class DataProcessor:
     #Existing output file will be overwritten to prevent lingering of historical data
     @staticmethod
     def createPDF(filename, contents):
+        if not contents:
+            print('No base64 encoded content given in DataProcessor.creatPDF()')
+            return
         #if output file already exist, delete it first
         if os.path.isfile(filename):
            os.remove(filename) 

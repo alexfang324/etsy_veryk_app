@@ -459,12 +459,19 @@ class Etsy_API:
     #receiptData = [receipt_id, name, zipcode]
     #trackingData = [tracking_number, name, zipcode]
     def updateTracking(self,receiptData,trackingData):
+        if not trackingData:
+            print('No tracking data is provided in Etsy_API.updateTracking()')
+            return
+        elif not receiptData:
+            print('No Etsy receipt data is provided in Etsy_API.updateTracking()')
+            return
+        print('Updated tracking for:\n')
         for receipt in receiptData:
             for tracking in trackingData:
                 if tracking[1:3]==receipt[1:3]:
                     receipt_id = receipt[0]
                     trackNum = tracking[0]
-                    print(tracking[1])
+                    print(tracking[1]+' '+tracking[0])
 
                     #using createReceiptShipment request from Etsy API
                     endpoint = "https://openapi.etsy.com/v3/application/shops/{shop_id}/receipts/{receipt_id}/tracking"

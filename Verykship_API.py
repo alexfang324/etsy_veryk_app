@@ -73,6 +73,10 @@ class Verykship_API:
     #order in verykship server. Returns array of verykship order ID and array of
     # [tracking number, name, zipcode]
     def createOrders(self,filename):
+        #if input file is absent
+        if not os.path.isfile(filename):
+            print('Input file verykship_shipment.xlsx needed for order creation is absent')
+            return [],[]
         headerData,orderData = DataProcessor.readInFile('verykship_shipment.xlsx')
         orderIDs =[]
         trackingData = []
@@ -82,6 +86,11 @@ class Verykship_API:
             #append trackNum, Name, zipcode
             trackingData.append([trackNum,order[14],order[24]])
         self.generateShipmentLabels(orderIDs) #generate shipment labels
+        
+        #move current shipment template to cache folder for record delete old cache file
+        if os.path.isfile('app_cache/verykship_shipment.xlsx'):
+            os.remove('app_cache/verykship_shipment.xlsx')
+        os.rename('verykship_shipment.xlsx','app_cache/verykship_shipment.xlsx')
         return orderIDs,trackingData
     
 ###############################################################################
@@ -126,6 +135,9 @@ class Verykship_API:
     #Takes in a list of orderID (eg.C010046409) and retrieve the shipment labels
     #to label.pdf file
     def generateShipmentLabels(self,orderIDs):
+        if not orderIDS:
+            print('no order ID given in Verykship_API.generateShipmentLabels()')
+            return
         pdfContent = [] #holder for list of base64 pdf shipment lables
         for orderID in orderIDs:
             action="shipment/label" #action specified in veryk API
@@ -146,4 +158,9 @@ class Verykship_API:
             b64Label = labelJSON["response"]["label"]
             pdfContent.append(b64Label)
         DataProcessor.createPDF('label.pdf',pdfContent) #create shipping label
+        
+        #move current shipment template to cache folder for record delete old cache file
+        if os.path.isfile('app_cache/label.pdf'):
+            os.remove('app_cache/label.pdf')
+        os.rename('label.pdf','app_cache/label.pdf')
 
