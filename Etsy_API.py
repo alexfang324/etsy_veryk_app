@@ -122,6 +122,8 @@ class Etsy_API:
             print(refreshTokenResponse.text)
             print('Going Re-Oauthenticate the app now...\n')
             self.OAuthenticate()
+            print('Successfully Retrieving New Access and Refresh Tokens\n')
+            return
         self.__access_token = refreshTokenJSON["access_token"]
         self.__refresh_token = refreshTokenJSON["refresh_token"]        
         self.updateRefreshTokenToFile()
@@ -335,7 +337,7 @@ class Etsy_API:
         #find package quantity hidden in "Variations" column and calculate total quantity
         #output array struct is ["Item Name","Spec", "Quantity", "Unit"]
         salesData = DataProcessor.updateQuantityUsingVariations(salesData,salesNameInd,salesVarInd,salesQuanInd,unitWanted,specWanted)
-        
+
         #insert sales quantity to corresponding row of inventory data
         for i in range(len(inventoryData)):
             matched = False #record if we see a match
@@ -345,10 +347,10 @@ class Etsy_API:
                     #check if they have the same units
                     if not inventoryData[i][-1] == salesData[j][-1]:
                         print('getSummary(): below inventory and sales item parsed from inventory_data.csv and sales_data.csv'
-                              ', respectively, have different units. Aborting function function call without updating data_summary.csv')
+                              ', respectively, have different units. Will not update sales quantitiy of this item')
                         print('\n',inventoryData[i])
                         print('\n',salesData[j])
-                        return
+                        break
                     matched = True
                     inventoryData[i].insert(2,salesData[j][2])
                     break

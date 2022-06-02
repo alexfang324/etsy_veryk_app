@@ -85,12 +85,14 @@ class Verykship_API:
             orderIDs.append(orderID)
             #append trackNum, Name, zipcode
             trackingData.append([trackNum,order[14],order[24]])
-        self.generateShipmentLabels(orderIDs) #generate shipment labels
-        
-        #move current shipment template to cache folder for record delete old cache file
+      
+        #move current shipment template to cache folder for record and prevent duplicate
+        #order generation by re-running this method again
         if os.path.isfile('app_cache/verykship_shipment.xlsx'):
             os.remove('app_cache/verykship_shipment.xlsx')
         os.rename('verykship_shipment.xlsx','app_cache/verykship_shipment.xlsx')
+        
+        self.generateShipmentLabels(orderIDs) #generate shipment labels
         return orderIDs,trackingData
     
 ###############################################################################
@@ -128,14 +130,14 @@ class Verykship_API:
             print(str(orderResponse)+" in createOrder() function")
             sys.exit(orderResponse.text)
         orderJSON = orderResponse.json()
-               
+
         return orderJSON["response"]["id"], orderJSON["response"]["waybill_number"]
 
 ###############################################################################
     #Takes in a list of orderID (eg.C010046409) and retrieve the shipment labels
     #to label.pdf file
     def generateShipmentLabels(self,orderIDs):
-        if not orderIDS:
+        if not orderIDs:
             print('no order ID given in Verykship_API.generateShipmentLabels()')
             return
         pdfContent = [] #holder for list of base64 pdf shipment lables

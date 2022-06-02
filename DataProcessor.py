@@ -132,6 +132,7 @@ class DataProcessor:
                         break
                 if not parsedNum: #if no per package quantity unit is found in Variations field
                     row.extend([row[quanInd],'N/A'])
+
              
         #############################
         #Combine rows with same specs in Variations column
