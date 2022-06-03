@@ -63,7 +63,9 @@ class DataProcessor:
         outputFile = kwargs.get('outputFile',None)
         writeType = kwargs.get('writeType',None)
         fileExtension = inputFile.split('.')[1]
-
+        
+        if not data:
+            return
         #############################################
         #handle Excel xlsx file with openpyxl library
         #############################################
@@ -84,8 +86,9 @@ class DataProcessor:
         #handle csv file 
         #############################################     
         else:     
-            #if output file exist, decide or not to copy data from input file
-            #to output file then assign appropriate file to write new data in
+            #if output file name exist and write type is 'append' then copy old file data
+            #to a new file first then write new data into it, otherwise we can just 
+            # write to the appropriate file without copying transfering data
             if outputFile and writeType=='a':
                 with open(inputFile,'r') as inf:
                     outf = open(outputFile,'w')
@@ -173,10 +176,10 @@ class DataProcessor:
     #second column is the full listing name. The function input data is a 2D list
     #with the full listing name stored in the nameInd index of every row
     @staticmethod    
-    def getPreferredName(data,nameInd):
+    def getPreferredName(data,nameInd,filename):
         
         #Generate Name Dict from file
-        with open('naming_convention.csv','r') as f:
+        with open(filename,'r') as f:
             lines = f.read().split('\n') #create a list of rows of the file data
             nameDict = {} #dict to store name data
       
@@ -199,7 +202,7 @@ class DataProcessor:
         return data
 
 ###############################################################################
-    #Takes in a pdf output file name and an array of b64encoded content.
+    #Takes in a pdf output filename and an array of b64encoded content.
     #Existing output file will be overwritten to prevent lingering of historical data
     @staticmethod
     def createPDF(filename, contents):

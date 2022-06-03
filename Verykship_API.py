@@ -69,17 +69,16 @@ class Verykship_API:
         return quoteJSON
 
 ###############################################################################
-    #Takes in the Verykship shipping tempalte and create shipment
-    #order in verykship server. Returns array of verykship order ID and array of
-    # [tracking number, name, zipcode]
-    def createOrders(self,filename):
+    #Takes in the Verykship shipping tempalte filename and create shipment
+    #order in verykship server. Output veryk_tracking_data.csv file
+    def createOrders(self,shopName):
         #if input file is absent
-        if not os.path.isfile(filename):
-            print('Input file verykship_shipment.xlsx needed for order creation is absent')
+        if not os.path.isfile(shopName + '_verykship_shipment.xlsx'):
+            print(shopName+': Input verykship_shipment.xlsx is not available, no veryk order created')
             return [],[]
-        headerData,orderData = DataProcessor.readInFile('verykship_shipment.xlsx')
+        headerData,orderData = DataProcessor.readInFile(shopName + '_verykship_shipment.xlsx')
         orderIDs =[]
-        trackingData = []
+        trackingData = [["tracking_id","name","zipcode"]]
         for order in orderData:
             orderID, trackNum = self.createOrder(order)
             orderIDs.append(orderID)
@@ -88,13 +87,16 @@ class Verykship_API:
       
         #move current shipment template to cache folder for record and prevent duplicate
         #order generation by re-running this method again
-        if os.path.isfile('app_cache/verykship_shipment.xlsx'):
-            os.remove('app_cache/verykship_shipment.xlsx')
-        os.rename('verykship_shipment.xlsx','app_cache/verykship_shipment.xlsx')
+        filename = shopName + '_verykship_shipment.xlsx'
+        if os.path.isfile('app_cache/'+filename):
+            os.remove('app_cache/'+filename)
+        os.rename(filename,'app_cache/'+filename)
         
-        self.generateShipmentLabels(orderIDs) #generate shipment labels
-        return orderIDs,trackingData
-    
+        self.generateShipmentLabels(orderIDs,shopName) #generate shipment labels
+        
+        #write tracking data to file for etsy object to update it on etsy website
+        DataProcessor.writeToFile(trackingData,writeType='w',inputFile=shopName+'_veryk_tracking_data.csv')
+           
 ###############################################################################
     #Takes in a row of data from Verykship shipping tempalte and create a shipment
     #order in verykship server. The order gets submitted automatically on server
@@ -136,7 +138,7 @@ class Verykship_API:
 ###############################################################################
     #Takes in a list of orderID (eg.C010046409) and retrieve the shipment labels
     #to label.pdf file
-    def generateShipmentLabels(self,orderIDs):
+    def generateShipmentLabels(self,orderIDs, shopName):
         if not orderIDs:
             print('no order ID given in Verykship_API.generateShipmentLabels()')
             return
@@ -159,10 +161,11 @@ class Verykship_API:
             labelJSON = labelResponse.json()
             b64Label = labelJSON["response"]["label"]
             pdfContent.append(b64Label)
-        DataProcessor.createPDF('label.pdf',pdfContent) #create shipping label
+        DataProcessor.createPDF(shopName + '_label.pdf',pdfContent) #create shipping label
         
         #move current shipment template to cache folder for record delete old cache file
-        if os.path.isfile('app_cache/label.pdf'):
-            os.remove('app_cache/label.pdf')
-        os.rename('label.pdf','app_cache/label.pdf')
+        filename = shopName + '_label.pdf'
+        if os.path.isfile('app_cache/'+filename):
+            os.remove('app_cache/'+filename)
+        os.rename(filename,'app_cache/'+filename)
 

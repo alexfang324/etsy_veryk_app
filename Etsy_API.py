@@ -54,7 +54,6 @@ class Etsy_API:
         self.generateCodeChallenge()
         self.getAuthorizationCode()
         self.getAccessToken()
-        self.getRefreshToken()
 
 ###############################################################################     
     def generateCodeChallenge(self):
@@ -107,7 +106,7 @@ class Etsy_API:
         self.__access_token = accessTokenJSON["access_token"]
         self.__refresh_token = accessTokenJSON["refresh_token"]
         self.updateRefreshTokenToFile()
-        print('OAuth2 Authentication Complete, Access Token Retrieved\n')
+        print(self.__shop_name+': OAuth2 Authentication Complete, Access Token Retrieved\n')
 ###############################################################################
     #Get refresh token
     def getRefreshToken(self):
@@ -127,7 +126,7 @@ class Etsy_API:
         self.__access_token = refreshTokenJSON["access_token"]
         self.__refresh_token = refreshTokenJSON["refresh_token"]        
         self.updateRefreshTokenToFile()
-        print('Successfully Retrieving New Access and Refresh Tokens\n')
+        print(self.__shop_name+': Successfully Retrieving New Access and Refresh Tokens')
 ###############################################################################
     #update refresh token to credential file by rewriting the entire file with 
     #appropraite update
@@ -143,6 +142,7 @@ class Etsy_API:
 ###############################################################################
     #GET all listings and for each listing, GET the variations and inventory data and write to a file
     def getInventory(self): 
+        print(self.__shop_name+': Retrieving Inventory (inventory_data.csv)')
         #######################
         #GET all active listings
         #######################
@@ -229,16 +229,17 @@ class Etsy_API:
                     quantity = listingJSON["products"][j]["offerings"][0]["quantity"] #index 0 because we never have more than one offering per variation
                     #append double quote to prevent csv file from splitting the comma in the content
                     inventoryData.append(['"'+listingTitles[i]+'"','"'+variation+'"', quantity]) 
-        inventoryData = DataProcessor.getPreferredName(inventoryData,0) #convert listing name to shorter preferred names
+        inventoryData = DataProcessor.getPreferredName(inventoryData,0,self.__shop_name+'_naming_convention.csv') #convert listing name to shorter preferred names
         inventoryData.sort(key=lambda x:x[0]) #sort data by name (first element in each list of list)
         inventoryData.insert(0,dataHeader) #append header to top of list and write to file
-        DataProcessor.writeToFile(inventoryData,writeType='w',inputFile='inventory_data.csv')
-        print('Retrieved Inventory (inventory_data.csv)\n')
+        DataProcessor.writeToFile(inventoryData,writeType='w',inputFile='data_file/'+self.__shop_name+'_inventory_data.csv')
+
 ###############################################################################
     #retrieve this month's "ordered item" data from Etsy with queries cap at 100
     #lines at a time. The retrival process stops when a particular query doesn't
     #provide a single line of relevant data. The data is then written to sales_data.csv    
     def getSalesData(self):
+        print(self.__shop_name+': Retrieving Sales Data (sales_data.csv)')
         dataSeen = True #initialize dummy holder to record if relevant data is seen in the particular query
         queryItr = 0 #starting point offset of the http GET data query
         dataHeader = ["Sale Date", "Item Name", "Variations", "Quantity"]
@@ -273,11 +274,11 @@ class Etsy_API:
                     variation=variation[:-2] #remove the extra comma and space at the end
                     #append double quote to prevent csv file from splitting the comma in the content
                     data.append([time,'"'+title+'"','"'+variation+'"',quantity])
-        data = DataProcessor.getPreferredName(data, 1) #convert listing name to shorter preferred names
+        data = DataProcessor.getPreferredName(data, 1,self.__shop_name+'_naming_convention.csv') #convert listing name to shorter preferred names
         data.sort(reverse=True,key=lambda x:x[0]) #sort data in descending order and by first element in list of list
         data.insert(0,dataHeader) #append header to top of list and write to file
-        DataProcessor.writeToFile(data, writeType='w',inputFile='sales_data.csv')
-        print('Retrieved Sales Data (sales_data.csv)\n')
+        DataProcessor.writeToFile(data, writeType='w',inputFile='data_file/'+self.__shop_name+'_sales_data.csv')
+
 ###############################################################################
     #retrieve 100 lines "ordered item" data from Etsy starting at index offset
     def sendSalesDataRequest(self,offset):
@@ -305,6 +306,7 @@ class Etsy_API:
     #output array = ["Item Name","Variation","Sales Quantity","After sale Inventory Quantity"]
     
     def getSummary(self):
+        print(self.__shop_name+': Preparing summary File (data_summary.csv)')
         unitWanted = ['pair','pcs','beads'] #Used in the priority given to identify per package quantity in "Variations" column to calculate actual quantity sold
         specWanted = ['Size','Color','Style'] #Used to combine quantities of items with same specs
 
@@ -312,7 +314,7 @@ class Etsy_API:
         #Read in and Process Inventory Data
         ###################################
         #read in inventory data file
-        inventoryHeader, inventoryData = DataProcessor.readInFile('inventory_data.csv')
+        inventoryHeader, inventoryData = DataProcessor.readInFile('data_file/'+self.__shop_name+'_inventory_data.csv')
         
         #find column index of variables wanted with a search in case data file structure changed
         invNameInd = inventoryHeader.index("Item Name")
@@ -327,7 +329,7 @@ class Etsy_API:
         #Read in and Process Sales Data
         ################################
         #read in sales data file
-        salesHeader, salesData = DataProcessor.readInFile('sales_data.csv')
+        salesHeader, salesData = DataProcessor.readInFile('data_file/'+self.__shop_name+'_sales_data.csv')
 
         #find column index of variables wanted with a search in case data file structure changed
         salesNameInd = salesHeader.index("Item Name")
@@ -361,12 +363,12 @@ class Etsy_API:
         #append header to data and write to file
         newHeader = ["Item Name", "Specs", "Sales Quantity", "Aft. Sale Inventory Quantity", "Unit"]
         inventoryData = [newHeader] + inventoryData
-        DataProcessor.writeToFile(inventoryData, writeType='w', inputFile='data_summary.csv')
-        print('Summary File Prepared (data_summary.csv)')
+        DataProcessor.writeToFile(inventoryData, writeType='w', inputFile='data_file/'+self.__shop_name+'_data_summary.csv')
+
 ###############################################################################
     #get new and unshipped order from Etsy and pass it to another function to
-    #generate template for creating shipping labels. shopName is used to determine
-    #eligibility for tracking of an order
+    #generate template for creating shipping labels and output file of 
+    #receipt data in etsy_receipt_data.csv.
     def getNewOrders(self):
         #using getShopReceipts request from Etsy API
         endpoint = "https://openapi.etsy.com/v3/application/shops/{shop_id}/receipts"
@@ -381,13 +383,16 @@ class Etsy_API:
             print(orderResponse.text)
             return None
         #filter out eligible orders and generate verykship template
-        print('Retrieved New Orders\n')
+        print(self.__shop_name+': Retrieved New Orders')
         eligibleOrders = self.eligibleForTracking(orderJSON["results"])
         receiptData = self.generateVerykTemplate(eligibleOrders)
-        return receiptData
-        
+                
+        #write receipt data into file for veryk object to udpate tracking
+        DataProcessor.writeToFile(receiptData,writeType='w',inputFile=self.__shop_name+'_etsy_receipt_data.csv')
+ 
 ###############################################################################        
     def eligibleForTracking(self,orders):
+        eligibleOrders = [] #holds eligible orders
         for order in orders:
             #get subtotal amount
             subtotal = order["subtotal"]["amount"]/order["subtotal"]["divisor"]
@@ -395,25 +400,30 @@ class Etsy_API:
             shippingCost = order["total_shipping_cost"]["amount"]/order["total_shipping_cost"]["divisor"]
             
             if self.__shop_name.lower() == 'sunmertime':
-                #if US order < $40 or CA order < $60
-                if order["country_iso"]=="US" and subtotal<40 or order["country_iso"]=="CA" and subtotal<60:
-                    #if customer didn't pay extra shipping, it shouldn't get tracked shipping       
-                    if shippingCost==0:
-                        orders.pop(orders.index(order)) #remove the order from array
+                #if US order > $40 or CA order > $60
+                if order["country_iso"]=="US" and subtotal>=40 or order["country_iso"]=="CA" and subtotal>=60:
+                    eligibleOrders.append(order)
+                #else if shipping was paid
+                elif shippingCost>0:
+                    eligibleOrders.append(order)
             elif self.__shop_name.lower() == 'sparkleland':
-                #if CA order < $100
-                if order["country_iso"]=="CA" and subtotal<100:
-                    #if customer didn't pay enough extra shipping, it shouldn't get tracked shipping
-                    if shippingCost < 5:
-                        orders.pop(orders.index(order)) #remove the order from array
+                #if US order > 40 or CA order > $100
+                if order["country_iso"]=="US" and subtotal>=40 or order["country_iso"]=="CA" and subtotal>=100:
+                    eligibleOrders.append(order)
+                #else if shipping was paid
+                elif shippingCost>5:
+                    eligibleOrders.append(order)
             else:
                 sys.exit("Invalid shopName is given in eligibleForTracking function")
-        print('Checked Orders Against Tracking Eligibility\n')
-        return orders
+        print(self.__shop_name+': Checked Orders Against Tracking Eligibility')
+        return eligibleOrders
 ###############################################################################
     #Takes an array of shipping information from Etsy and generate a template needed
-    #by Veryshipk for batch shipment label creation
+    #by Veryshipk for batch shipment label creation in veryk_shipment.csv
     def generateVerykTemplate(self, newOrders):
+        if not newOrders:
+            print(self.__shop_name+': No eligible order is seen')
+            return
         
         #dict between ISO-3166 country code and veryshipk courier service code
         postalDict={"CA":"180", #CP Expedited
@@ -421,7 +431,7 @@ class Etsy_API:
                     }
         personSet =set() #hashset to hold repicient name and zipcode
         data = [] #used to hold all order information
-        receiptData = [] #used to hold Etsy receipe id and name for updating tracking in another function
+        receiptData = [["receipt_id","name","zipcode"]] #used to hold Etsy receipe id and name for updating tracking in another function
         for order in newOrders:
             #make sure the order in "New Order section" is paid
             if not order["status"]:
@@ -451,23 +461,39 @@ class Etsy_API:
             #product information from column AG to AJ
             label.extend(["","","",""])
             data.append(label)
-        data = DataProcessor.getPreferredName(data, 29) #convert listing name to shorter preferred names
-        DataProcessor.writeToFile(data,writeType='a',inputFile='verykship_template.xlsx',outputFile='verykship_shipment.xlsx')
-        print('Shipment Template Generated (verykship_shipment.xlsx)\n')
+        data = DataProcessor.getPreferredName(data, 29, self.__shop_name+'_naming_convention.csv') #convert listing name to shorter preferred names
+        DataProcessor.writeToFile(data,writeType='a',inputFile='verykship_template.xlsx',outputFile=self.__shop_name+'_verykship_shipment.xlsx')
+        print(self.__shop_name+': Shipment Template Generated (verykship_shipment.xlsx)')
         return receiptData
-
 ###############################################################################
-    #Updates tracking to appropriate order
-    #receiptData = [receipt_id, name, zipcode]
-    #trackingData = [tracking_number, name, zipcode]
-    def updateTracking(self,receiptData,trackingData):
-        if not trackingData:
-            print('No tracking data is provided in Etsy_API.updateTracking()')
+    #Updates tracking to appropriate order using etsy_receipt_data.csv
+    # and veryk_tracking_data.csv
+    def updateTracking(self):
+        #read in veryk tracking data
+        trackingFile = self.__shop_name + '_veryk_tracking_data.csv'
+        if os.path.isfile(trackingFile):
+            trackingDataHeader,trackingData = DataProcessor.readInFile(trackingFile)
+            #move file to cache folder
+            if os.path.isfile('app_cache/'+trackingFile):
+                os.remove('app_cache/'+trackingFile)
+            os.rename(trackingFile,'app_cache/'+trackingFile)
+        else:
+            print(self.__shop_name+': tracking_data file is not available: nothing to update')
             return
-        elif not receiptData:
-            print('No Etsy receipt data is provided in Etsy_API.updateTracking()')
+        
+        #read in etsy receipt data
+        receiptFile = self.__shop_name + '_etsy_receipt_data.csv'
+        if os.path.isfile(receiptFile):
+            receiptDataHeader,receiptData = DataProcessor.readInFile(receiptFile)
+            #move file to cache folder
+            if os.path.isfile('app_cache/'+receiptFile):
+                os.remove('app_cache/'+receiptFile)
+            os.rename(receiptFile,'app_cache/'+receiptFile)
+        else:
+            print(self.__shop_name+':No receipt data is provided to Etsy_API.updateTracking()')
             return
-        print('Updated tracking for:\n')
+
+        print('\n'+self.__shop_name+': Updated tracking for:')
         for receipt in receiptData:
             for tracking in trackingData:
                 if tracking[1:3]==receipt[1:3]:
@@ -487,7 +513,7 @@ class Etsy_API:
                         print(str(updateResponse)+" occured when updating tracking for client %s in the updateTracking function"%(tracking[1].upper()))
                         print(updateResponse.text)
                         return None
-        print('Tracking Updated\n')
+        print('\n'+self.__shop_name+': Tracking Updated\n')
 
 ###############################################################################
     def getShippingCarriers(self):
