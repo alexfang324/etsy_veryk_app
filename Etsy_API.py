@@ -140,7 +140,8 @@ class Etsy_API:
                     else:
                         fout.write(column[0]+', '+self.__refresh_token)                
 ###############################################################################
-    #GET all listings and for each listing, GET the variations and inventory data and write to a file
+    #GET all active and sold out listings and for each listing, GET the variations
+    #and inventory data and write to a file
     def getInventory(self): 
         print(self.__shop_name+': Retrieving Inventory (inventory_data.csv)')
         #######################
@@ -303,7 +304,7 @@ class Etsy_API:
     #a summary file. The file has below column structure:
     #sales_data = ["Sales Date","Item Name","Variation","Quantity"]
     #inventory_data = ["Item Name","Variation","Quantity"]
-    #output array = ["Item Name","Variation","Sales Quantity","After sale Inventory Quantity"]
+    #output array = ["Item Name","Variation","Sales Quantity","After sale Inventory Quantity", "Unit]
     
     def getSummary(self):
         print(self.__shop_name+': Preparing summary File (data_summary.csv)')
@@ -355,11 +356,15 @@ class Etsy_API:
                         break
                     matched = True
                     inventoryData[i].insert(2,salesData[j][2])
+                    salesData.pop(j) #remove salesData that has been recorded
                     break
             #if no match is found  
             if not matched:
                 inventoryData[i].insert(2,'') #insert blank sale quantity for current inventory
-
+        #if there is order sold that had its listing deleted we will append to the end of file
+        if salesData:
+            for data in salesData:
+                inventoryData.append([data[0],data[1],data[2],0,data[3]])
         #append header to data and write to file
         newHeader = ["Item Name", "Specs", "Sales Quantity", "Aft. Sale Inventory Quantity", "Unit"]
         inventoryData = [newHeader] + inventoryData

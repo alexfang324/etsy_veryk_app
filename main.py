@@ -7,18 +7,18 @@ sparkleland = Etsy_API('sparkleland')
 kobj = Verykship_API()
 
 #Retrieve Report
-sunmertime.getInventory()
-sunmertime.getSalesData()
-sunmertime.getSummary()
-sparkleland.getInventory()
-sparkleland.getSalesData()
-sparkleland.getSummary()
+# sunmertime.getInventory()
+# sunmertime.getSalesData()
+# sunmertime.getSummary()
+# sparkleland.getInventory()
+# sparkleland.getSalesData()
+# sparkleland.getSummary()
 
 #Get and create Shipment
-# sunmertime.getNewOrders()
+sunmertime.getNewOrders()
 # kobj.createOrders('sunmertime')
 # sunmertime.updateTracking()
-# sparkleland.getNewOrders()
+sparkleland.getNewOrders()
 # kobj.createOrders('sparkleland')
 # sparkleland.updateTracking()
 

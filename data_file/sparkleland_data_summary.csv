@@ -60,7 +60,7 @@ Item Name,Specs,Sales Quantity,Aft. Sale Inventory Quantity,Unit
 "Spring Ring Clasp",Size: 5.5mm closed ring,,55,pcs
 "Spring Ring Clasp",Size: 5.5mm open ring,,85,pcs
 "Spring Ring Clasp",Size: 5mm closed ring,,80,pcs
-"Spring Ring Clasp",Size: 5mm open ring,,120,pcs
+"Spring Ring Clasp",Size: 5mm open ring,5,115,pcs
 "Spring Ring Clasp",Size: 6mm closed ring,,75,pcs
 "Spring Ring Clasp",Size: 6mm open ring,,100,pcs
 "Star Earrings",,,3,N/A
@@ -81,3 +81,5 @@ Item Name,Specs,Sales Quantity,Aft. Sale Inventory Quantity,Unit
 "Wheat Round Earrings",,,7,N/A
 "Zircon Earrings",,,2,N/A
 "Zircon Rhinestone Earrings",,,0,N/A
+"2is a customer listing",,1,0,N/A
+"This is a customer listing",Size: 2mm,100,0,beads
