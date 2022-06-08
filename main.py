@@ -16,12 +16,12 @@ kobj = Verykship_API()
 
 #Get and create Shipment
 sunmertime.getNewOrders()
-# kobj.createOrders('sunmertime')
-# sunmertime.updateTracking()
+kobj.createOrders('sunmertime')
+sunmertime.updateTracking()
 sparkleland.getNewOrders()
-# kobj.createOrders('sparkleland')
-# sparkleland.updateTracking()
-
+kobj.createOrders('sparkleland')
+sparkleland.updateTracking()
+sparkleland.moveToCacheFolder()
 
 
 

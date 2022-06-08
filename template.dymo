@@ -1,0 +1,281 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<DesktopLabel Version="1">
+  <DYMOLabel Version="3">
+    <Description>DYMO Label</Description>
+    <Orientation>Landscape</Orientation>
+    <LabelName>Addresss0722370</LabelName>
+    <InitialLength>0</InitialLength>
+    <BorderStyle>SolidLine</BorderStyle>
+    <DYMORect>
+      <DYMOPoint>
+        <X>0.23</X>
+        <Y>0.06</Y>
+      </DYMOPoint>
+      <Size>
+        <Width>3.21</Width>
+        <Height>0.9966666</Height>
+      </Size>
+    </DYMORect>
+    <BorderColor>
+      <SolidColorBrush>
+        <Color A="1" R="0" G="0" B="0"></Color>
+      </SolidColorBrush>
+    </BorderColor>
+    <BorderThickness>1</BorderThickness>
+    <Show_Border>False</Show_Border>
+    <DynamicLayoutManager>
+      <RotationBehavior>ClearObjects</RotationBehavior>
+      <LabelObjects>
+        <TextObject>
+          <Name>ITextObject0</Name>
+          <Brushes>
+            <BackgroundBrush>
+              <SolidColorBrush>
+                <Color A="0" R="0" G="0" B="0"></Color>
+              </SolidColorBrush>
+            </BackgroundBrush>
+            <BorderBrush>
+              <SolidColorBrush>
+                <Color A="1" R="0" G="0" B="0"></Color>
+              </SolidColorBrush>
+            </BorderBrush>
+            <StrokeBrush>
+              <SolidColorBrush>
+                <Color A="1" R="0" G="0" B="0"></Color>
+              </SolidColorBrush>
+            </StrokeBrush>
+            <FillBrush>
+              <SolidColorBrush>
+                <Color A="0" R="0" G="0" B="0"></Color>
+              </SolidColorBrush>
+            </FillBrush>
+          </Brushes>
+          <Rotation>Rotation0</Rotation>
+          <OutlineThickness>1</OutlineThickness>
+          <IsOutlined>False</IsOutlined>
+          <BorderStyle>SolidLine</BorderStyle>
+          <Margin>
+            <DYMOThickness Left="0" Top="0" Right="0" Bottom="0" />
+          </Margin>
+          <HorizontalAlignment>Left</HorizontalAlignment>
+          <VerticalAlignment>Middle</VerticalAlignment>
+          <FitMode>AlwaysFit</FitMode>
+          <IsVertical>False</IsVertical>
+          <FormattedText>
+            <FitMode>AlwaysFit</FitMode>
+            <HorizontalAlignment>Left</HorizontalAlignment>
+            <VerticalAlignment>Middle</VerticalAlignment>
+            <IsVertical>False</IsVertical>
+            <LineTextSpan>
+              <DataMappingTextSpan>
+                <Text>Mary Haehl</Text>
+                <FontInfo>
+                  <FontName>Segoe UI</FontName>
+                  <FontSize>11.9</FontSize>
+                  <IsBold>False</IsBold>
+                  <IsItalic>False</IsItalic>
+                  <IsUnderline>False</IsUnderline>
+                  <FontBrush>
+                    <SolidColorBrush>
+                      <Color A="1" R="0" G="0" B="0"></Color>
+                    </SolidColorBrush>
+                  </FontBrush>
+                </FontInfo>
+                <ColumnName>Column1</ColumnName>
+              </DataMappingTextSpan>
+            </LineTextSpan>
+            <LineTextSpan>
+              <DataMappingTextSpan>
+                <Text>512 32nd St Nw</Text>
+                <FontInfo>
+                  <FontName>Segoe UI</FontName>
+                  <FontSize>11.9</FontSize>
+                  <IsBold>False</IsBold>
+                  <IsItalic>False</IsItalic>
+                  <IsUnderline>False</IsUnderline>
+                  <FontBrush>
+                    <SolidColorBrush>
+                      <Color A="1" R="0" G="0" B="0"></Color>
+                    </SolidColorBrush>
+                  </FontBrush>
+                </FontInfo>
+                <ColumnName>Column2</ColumnName>
+              </DataMappingTextSpan>
+              <TextSpan>
+                <Text> </Text>
+                <FontInfo>
+                  <FontName>Segoe UI</FontName>
+                  <FontSize>11.9</FontSize>
+                  <IsBold>False</IsBold>
+                  <IsItalic>False</IsItalic>
+                  <IsUnderline>False</IsUnderline>
+                  <FontBrush>
+                    <SolidColorBrush>
+                      <Color A="1" R="0" G="0" B="0"></Color>
+                    </SolidColorBrush>
+                  </FontBrush>
+                </FontInfo>
+              </TextSpan>
+              <DataMappingTextSpan>
+                <Text />
+                <FontInfo>
+                  <FontName>Segoe UI</FontName>
+                  <FontSize>11.9</FontSize>
+                  <IsBold>False</IsBold>
+                  <IsItalic>False</IsItalic>
+                  <IsUnderline>False</IsUnderline>
+                  <FontBrush>
+                    <SolidColorBrush>
+                      <Color A="1" R="0" G="0" B="0"></Color>
+                    </SolidColorBrush>
+                  </FontBrush>
+                </FontInfo>
+                <ColumnName>Column3</ColumnName>
+              </DataMappingTextSpan>
+            </LineTextSpan>
+            <LineTextSpan>
+              <DataMappingTextSpan>
+                <Text>E Wenatchee</Text>
+                <FontInfo>
+                  <FontName>Segoe UI</FontName>
+                  <FontSize>11.9</FontSize>
+                  <IsBold>False</IsBold>
+                  <IsItalic>False</IsItalic>
+                  <IsUnderline>False</IsUnderline>
+                  <FontBrush>
+                    <SolidColorBrush>
+                      <Color A="1" R="0" G="0" B="0"></Color>
+                    </SolidColorBrush>
+                  </FontBrush>
+                </FontInfo>
+                <ColumnName>Column4</ColumnName>
+              </DataMappingTextSpan>
+              <TextSpan>
+                <Text> </Text>
+                <FontInfo>
+                  <FontName>Segoe UI</FontName>
+                  <FontSize>11.9</FontSize>
+                  <IsBold>False</IsBold>
+                  <IsItalic>False</IsItalic>
+                  <IsUnderline>False</IsUnderline>
+                  <FontBrush>
+                    <SolidColorBrush>
+                      <Color A="1" R="0" G="0" B="0"></Color>
+                    </SolidColorBrush>
+                  </FontBrush>
+                </FontInfo>
+              </TextSpan>
+              <DataMappingTextSpan>
+                <Text>WA</Text>
+                <FontInfo>
+                  <FontName>Segoe UI</FontName>
+                  <FontSize>11.9</FontSize>
+                  <IsBold>False</IsBold>
+                  <IsItalic>False</IsItalic>
+                  <IsUnderline>False</IsUnderline>
+                  <FontBrush>
+                    <SolidColorBrush>
+                      <Color A="1" R="0" G="0" B="0"></Color>
+                    </SolidColorBrush>
+                  </FontBrush>
+                </FontInfo>
+                <ColumnName>Column5</ColumnName>
+              </DataMappingTextSpan>
+              <TextSpan>
+                <Text> </Text>
+                <FontInfo>
+                  <FontName>Segoe UI</FontName>
+                  <FontSize>11.9</FontSize>
+                  <IsBold>False</IsBold>
+                  <IsItalic>False</IsItalic>
+                  <IsUnderline>False</IsUnderline>
+                  <FontBrush>
+                    <SolidColorBrush>
+                      <Color A="1" R="0" G="0" B="0"></Color>
+                    </SolidColorBrush>
+                  </FontBrush>
+                </FontInfo>
+              </TextSpan>
+              <DataMappingTextSpan>
+                <Text>98802-9504</Text>
+                <FontInfo>
+                  <FontName>Segoe UI</FontName>
+                  <FontSize>11.9</FontSize>
+                  <IsBold>False</IsBold>
+                  <IsItalic>False</IsItalic>
+                  <IsUnderline>False</IsUnderline>
+                  <FontBrush>
+                    <SolidColorBrush>
+                      <Color A="1" R="0" G="0" B="0"></Color>
+                    </SolidColorBrush>
+                  </FontBrush>
+                </FontInfo>
+                <ColumnName>Column6</ColumnName>
+              </DataMappingTextSpan>
+            </LineTextSpan>
+            <LineTextSpan>
+              <DataMappingTextSpan>
+                <Text>US</Text>
+                <FontInfo>
+                  <FontName>Segoe UI</FontName>
+                  <FontSize>11.9</FontSize>
+                  <IsBold>False</IsBold>
+                  <IsItalic>False</IsItalic>
+                  <IsUnderline>False</IsUnderline>
+                  <FontBrush>
+                    <SolidColorBrush>
+                      <Color A="1" R="0" G="0" B="0"></Color>
+                    </SolidColorBrush>
+                  </FontBrush>
+                </FontInfo>
+                <ColumnName>Column7</ColumnName>
+              </DataMappingTextSpan>
+            </LineTextSpan>
+          </FormattedText>
+          <ObjectLayout>
+            <DYMOPoint>
+              <X>0.2464863</X>
+              <Y>0.1314484</Y>
+            </DYMOPoint>
+            <Size>
+              <Width>3.007027</Width>
+              <Height>0.9156964</Height>
+            </Size>
+          </ObjectLayout>
+        </TextObject>
+      </LabelObjects>
+    </DynamicLayoutManager>
+  </DYMOLabel>
+  <LabelApplication>Blank</LabelApplication>
+  <DataTable>
+    <Columns>
+      <DataColumn>Column1</DataColumn>
+      <DataColumn>Column2</DataColumn>
+      <DataColumn>Column3</DataColumn>
+      <DataColumn>Column4</DataColumn>
+      <DataColumn>Column5</DataColumn>
+      <DataColumn>Column6</DataColumn>
+      <DataColumn>Column7</DataColumn>
+    </Columns>
+    <Rows>
+      <DataRow>
+        <Value>Mary Haehl</Value>
+        <Value>512 32nd St Nw</Value>
+        <Value />
+        <Value>E Wenatchee</Value>
+        <Value>WA</Value>
+        <Value>98802-9504</Value>
+        <Value>US</Value>
+      </DataRow>
+      <DataRow>
+        <Value>Fella Hadj Kaddour</Value>
+        <Value>6939 avenue Bloomfield</Value>
+        <Value>Apt 8</Value>
+        <Value>Montréal</Value>
+        <Value>QC</Value>
+        <Value>H3N 2G7</Value>
+        <Value>CA</Value>
+      </DataRow>
+    </Rows>
+  </DataTable>
+</DesktopLabel>

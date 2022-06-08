@@ -387,17 +387,21 @@ class Etsy_API:
             print(str(orderResponse)+" occured when retrieving new order details in the getNewOrders function")
             print(orderResponse.text)
             return None
-        #filter out eligible orders and generate verykship template
+        #filter out eligible orders and generate verykship template and stamp shipping labels
         print(self.__shop_name+': Retrieved New Orders')
-        eligibleOrders = self.eligibleForTracking(orderJSON["results"])
+        eligibleOrders, nonEligibleOrders = self.eligibleForTracking(orderJSON["results"])
         receiptData = self.generateVerykTemplate(eligibleOrders)
+        self.generateStampLabels(nonEligibleOrders)
                 
         #write receipt data into file for veryk object to udpate tracking
         DataProcessor.writeToFile(receiptData,writeType='w',inputFile=self.__shop_name+'_etsy_receipt_data.csv')
  
-###############################################################################        
+###############################################################################  
+    #takes an Etsy order JSON and filter the shipping information into two eligible
+    #and non-eligible orders.      
     def eligibleForTracking(self,orders):
         eligibleOrders = [] #holds eligible orders
+        nonEligibleOrders = [] #holds non-eligible orders
         for order in orders:
             #get subtotal amount
             subtotal = order["subtotal"]["amount"]/order["subtotal"]["divisor"]
@@ -405,29 +409,35 @@ class Etsy_API:
             shippingCost = order["total_shipping_cost"]["amount"]/order["total_shipping_cost"]["divisor"]
             
             if self.__shop_name.lower() == 'sunmertime':
-                #if US order > $40 or CA order > $60
+                #eligible if US order > $40 or CA order > $60
                 if order["country_iso"]=="US" and subtotal>=40 or order["country_iso"]=="CA" and subtotal>=60:
                     eligibleOrders.append(order)
-                #else if shipping was paid
+                #else eligible if shipping was paid
                 elif shippingCost>0:
                     eligibleOrders.append(order)
+                #non-eligible
+                else:
+                    nonEligibleOrders.append(order)
             elif self.__shop_name.lower() == 'sparkleland':
-                #if US order > 40 or CA order > $100
+                #eligible if US order > 40 or CA order > $100
                 if order["country_iso"]=="US" and subtotal>=40 or order["country_iso"]=="CA" and subtotal>=100:
                     eligibleOrders.append(order)
-                #else if shipping was paid
+                #else eligible if shipping was paid
                 elif shippingCost>5:
                     eligibleOrders.append(order)
+                #non-eligible
+                else:
+                    nonEligibleOrders.append(order)
             else:
                 sys.exit("Invalid shopName is given in eligibleForTracking function")
         print(self.__shop_name+': Checked Orders Against Tracking Eligibility')
-        return eligibleOrders
+        return eligibleOrders, nonEligibleOrders
 ###############################################################################
     #Takes an array of shipping information from Etsy and generate a template needed
     #by Veryshipk for batch shipment label creation in veryk_shipment.csv
     def generateVerykTemplate(self, newOrders):
         if not newOrders:
-            print(self.__shop_name+': No eligible order is seen')
+            print(self.__shop_name+': No eligible tracked order is seen')
             return
         
         #dict between ISO-3166 country code and veryshipk courier service code
@@ -451,7 +461,7 @@ class Etsy_API:
             #then update all order with the same tracking using receiptData information
             personInfo = tuple([order["name"],order["zip"]])
             if personInfo in personSet:
-                continue #person already placed an order, do not generate another shipment
+                continue #person already placed an order, do not generate another shipment, move on to next order
             personSet.add(personInfo)
             label = [] # holds details of a single order
             label.append(postalDict[order["country_iso"]]) #template column A
@@ -497,7 +507,7 @@ class Etsy_API:
         else:
             print(self.__shop_name+':No receipt data is provided to Etsy_API.updateTracking()')
             return
-
+        
         print('\n'+self.__shop_name+': Updated tracking for:')
         for receipt in receiptData:
             for tracking in trackingData:
@@ -518,7 +528,23 @@ class Etsy_API:
                         print(str(updateResponse)+" occured when updating tracking for client %s in the updateTracking function"%(tracking[1].upper()))
                         print(updateResponse.text)
                         return None
-        print('\n'+self.__shop_name+': Tracking Updated\n')
+        print(self.__shop_name+': Tracking Updated')
+
+###############################################################################
+    #takes a etsy order JSON and writes need shipping information to a csv file
+    def generateStampLabels(self,orders):
+        if not orders:
+            print(self.__shop_name+": No stamp label is seen")
+            return
+        print(self.__shop_name+": Generating stamp labels")
+        personSet =set() #hashset to hold repicient name and zipcode
+        label = [] #used to hold all order information       
+        for order in orders:
+            if not order["status"]:
+                print("customer %s hasn't paid, skipping his/her shipment label generation"%(order["name"]))
+                break;
+            label.append([order["name"],order["first_line"],order["second_line"],order["city"],order["state"],order["zip"],order["country_iso"]])
+        DataProcessor.writeToFile(label,writeType='a',inputFile='stamp_label.csv')
 
 ###############################################################################
     def getShippingCarriers(self):
@@ -531,3 +557,19 @@ class Etsy_API:
             sys.exit(carrierResponse.text)
         carrierJSON = carrierResponse.json()
         return carrierJSON
+
+###############################################################################
+    #move files to app_cache folder
+    def moveToCacheFolder(self):
+        #if new file exist, delete the one in app_cache folder then move new file to folder
+        filename = 'stamp_label.csv'
+        if os.path.isfile(filename):
+            if os.path.isfile('app_cache/'+filename):
+                os.remove('app_cache/'+filename)           
+            os.rename(filename,'app_cache/'+filename)
+
+        filename = 'ship_label.pdf'
+        if os.path.isfile(filename):
+            if os.path.isfile('app_cache/'+filename):
+                os.remove('app_cache/'+filename)           
+            os.rename(filename,'app_cache/'+filename)

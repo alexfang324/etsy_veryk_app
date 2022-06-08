@@ -72,6 +72,7 @@ class Verykship_API:
     #Takes in the Verykship shipping tempalte filename and create shipment
     #order in verykship server. Output veryk_tracking_data.csv file
     def createOrders(self,shopName):
+        print(shopName+': creating veryk orders')
         #if input file is absent
         if not os.path.isfile(shopName + '_verykship_shipment.xlsx'):
             print(shopName+': Input verykship_shipment.xlsx is not available, no veryk order created')
@@ -161,7 +162,11 @@ class Verykship_API:
             labelJSON = labelResponse.json()
             b64Label = labelJSON["response"]["label"]
             pdfContent.append(b64Label)
-        DataProcessor.createPDF(shopName + '_label.pdf',pdfContent) #create shipping label
+            
+        #create shipping label
+        DataProcessor.createPDF(shopName + '_label.pdf',pdfContent)
+        DataProcessor.appendPDF(shopName + '_label.pdf','ship_label.pdf')
+        DataProcessor.deletePDF(shopName + '_label.pdf')
         
         #move current shipment template to cache folder for record delete old cache file
         filename = shopName + '_label.pdf'

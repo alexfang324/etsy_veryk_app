@@ -240,4 +240,32 @@ class DataProcessor:
         #write pdf object to file
         output.write(filename)
         output.close()
+
+###############################################################################
+    #Append input pdf to output pdf. If output file doesn't exist, input file will be 
+    #renamed as the output file
+    @staticmethod
+    def appendPDF(inputfile,outputfile):
+        if not os.path.isfile(inputfile):
+            print(inputfile+' doens\'t exist')
+            return
+        if not inputfile.split('.')[1] == 'pdf':
+            print('input file is not of pdf format. File is not appended')
+            return
         
+        #if outputfile doesn't exist, rename inputfile as outputfile
+        if not os.path.isfile(outputfile):
+            os.rename(inputfile,outputfile)
+            return
+        #otherwise, append to outputfile
+        else:
+            mergeFile = PyPDF2.PdfFileMerger()
+            mergeFile.append(PyPDF2.PdfFileReader(outputfile, 'rb'))
+            mergeFile.append(PyPDF2.PdfFileReader(inputfile, 'rb'))
+            mergeFile.write(outputfile)
+
+###############################################################################
+    @staticmethod
+    def deletePDF(filename):
+        if os.path.isfile(filename):
+            os.remove(filename)
