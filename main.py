@@ -1,7 +1,9 @@
 from Etsy_API import *
 from Verykship_API import *
 
-#create object
+#The following examples assume we have two Etsy shops: sparkleland and sunmertime
+
+#create objects
 sunmertime = Etsy_API('sunmertime')
 sparkleland = Etsy_API('sparkleland')
 kobj = Verykship_API()
@@ -21,7 +23,7 @@ sunmertime.updateTracking()
 sparkleland.getNewOrders()
 kobj.createOrders('sparkleland')
 sparkleland.updateTracking()
-sparkleland.moveToCacheFolder()
+sparkleland.moveToCacheFolder() #only need to be called once by either Etsy object
 
 
 

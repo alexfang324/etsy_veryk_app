@@ -372,6 +372,7 @@ class Etsy_API:
         DataProcessor.writeToFile(inventoryData, writeType='w', inputFile='data_file/'+self.__shop_name+'_data_summary.csv')
 
 ###############################################################################
+    #THIS FUNCTION IS NOT COMPLETE, STILL HAS BUG
     def updateSummaryFile(self):
         if not os.path.isfile('data_file/'+self.__shop_name+'_data_summary.csv'):
             print('data file doesn\'t exist, aborting function')
