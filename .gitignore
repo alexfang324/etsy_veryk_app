@@ -4,4 +4,5 @@ credential/veryk.csv
 sparkleland_naming_convention.csv
 sunmertime_naming_convention.csv
 data_file/*
+app_cache/*
 template.dymo

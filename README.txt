@@ -23,6 +23,6 @@ page and shipping label will be the associated Etsy listing titles.
 in the main script.
 
 Useful Output File:
-1. label.pdf - contains shipping label of tracked orders. Can be printed directly with a printer.
-2. stamp.csv - contains shipping information of untracked orders. Recommand import into a label printer (e.g. Dymo) for bulk printing
+1. app_cache/label.pdf - contains shipping label of tracked orders. Can be printed directly with a printer.
+2. app_cache/stamp_label.csv - contains shipping information of untracked orders. Recommand import into a label printer (e.g. Dymo) for bulk printing
 3. data_file/yourShopName_summary.csv - contains real-time inventory and the current month sales data in sorted orders. 
