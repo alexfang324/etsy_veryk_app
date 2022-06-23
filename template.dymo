@@ -68,10 +68,10 @@
             <IsVertical>False</IsVertical>
             <LineTextSpan>
               <DataMappingTextSpan>
-                <Text>Mary Haehl</Text>
+                <Text>Sonila Papa</Text>
                 <FontInfo>
-                  <FontName>Segoe UI</FontName>
-                  <FontSize>11.9</FontSize>
+                  <FontName>Arial Rounded MT</FontName>
+                  <FontSize>14.2</FontSize>
                   <IsBold>False</IsBold>
                   <IsItalic>False</IsItalic>
                   <IsUnderline>False</IsUnderline>
@@ -86,10 +86,10 @@
             </LineTextSpan>
             <LineTextSpan>
               <DataMappingTextSpan>
-                <Text>512 32nd St Nw</Text>
+                <Text>1301 college avenue</Text>
                 <FontInfo>
-                  <FontName>Segoe UI</FontName>
-                  <FontSize>11.9</FontSize>
+                  <FontName>Arial Rounded MT</FontName>
+                  <FontSize>14.2</FontSize>
                   <IsBold>False</IsBold>
                   <IsItalic>False</IsItalic>
                   <IsUnderline>False</IsUnderline>
@@ -102,10 +102,25 @@
                 <ColumnName>Column2</ColumnName>
               </DataMappingTextSpan>
               <TextSpan>
-                <Text> </Text>
+                <Text />
                 <FontInfo>
-                  <FontName>Segoe UI</FontName>
-                  <FontSize>11.9</FontSize>
+                  <FontName>Microsoft YaHei UI</FontName>
+                  <FontSize>14.2</FontSize>
+                  <IsBold>False</IsBold>
+                  <IsItalic>False</IsItalic>
+                  <IsUnderline>False</IsUnderline>
+                  <FontBrush>
+                    <SolidColorBrush>
+                      <Color A="1" R="0" G="0" B="0"></Color>
+                    </SolidColorBrush>
+                  </FontBrush>
+                </FontInfo>
+              </TextSpan>
+              <TextSpan>
+                <Text />
+                <FontInfo>
+                  <FontName>Arial Rounded MT</FontName>
+                  <FontSize>14.2</FontSize>
                   <IsBold>False</IsBold>
                   <IsItalic>False</IsItalic>
                   <IsUnderline>False</IsUnderline>
@@ -117,10 +132,10 @@
                 </FontInfo>
               </TextSpan>
               <DataMappingTextSpan>
-                <Text />
+                <Text>Unit 3F</Text>
                 <FontInfo>
-                  <FontName>Segoe UI</FontName>
-                  <FontSize>11.9</FontSize>
+                  <FontName>Arial Rounded MT</FontName>
+                  <FontSize>14.2</FontSize>
                   <IsBold>False</IsBold>
                   <IsItalic>False</IsItalic>
                   <IsUnderline>False</IsUnderline>
@@ -132,13 +147,28 @@
                 </FontInfo>
                 <ColumnName>Column3</ColumnName>
               </DataMappingTextSpan>
+              <TextSpan>
+                <Text />
+                <FontInfo>
+                  <FontName>Arial Rounded MT</FontName>
+                  <FontSize>14.2</FontSize>
+                  <IsBold>False</IsBold>
+                  <IsItalic>False</IsItalic>
+                  <IsUnderline>False</IsUnderline>
+                  <FontBrush>
+                    <SolidColorBrush>
+                      <Color A="1" R="0" G="0" B="0"></Color>
+                    </SolidColorBrush>
+                  </FontBrush>
+                </FontInfo>
+              </TextSpan>
             </LineTextSpan>
             <LineTextSpan>
               <DataMappingTextSpan>
-                <Text>E Wenatchee</Text>
+                <Text>SOUTH MILWAUKEE</Text>
                 <FontInfo>
-                  <FontName>Segoe UI</FontName>
-                  <FontSize>11.9</FontSize>
+                  <FontName>Arial Rounded MT</FontName>
+                  <FontSize>14.2</FontSize>
                   <IsBold>False</IsBold>
                   <IsItalic>False</IsItalic>
                   <IsUnderline>False</IsUnderline>
@@ -151,10 +181,10 @@
                 <ColumnName>Column4</ColumnName>
               </DataMappingTextSpan>
               <TextSpan>
-                <Text> </Text>
+                <Text>, </Text>
                 <FontInfo>
-                  <FontName>Segoe UI</FontName>
-                  <FontSize>11.9</FontSize>
+                  <FontName>Arial Rounded MT</FontName>
+                  <FontSize>14.2</FontSize>
                   <IsBold>False</IsBold>
                   <IsItalic>False</IsItalic>
                   <IsUnderline>False</IsUnderline>
@@ -166,10 +196,10 @@
                 </FontInfo>
               </TextSpan>
               <DataMappingTextSpan>
-                <Text>WA</Text>
+                <Text>WI</Text>
                 <FontInfo>
-                  <FontName>Segoe UI</FontName>
-                  <FontSize>11.9</FontSize>
+                  <FontName>Arial Rounded MT</FontName>
+                  <FontSize>14.2</FontSize>
                   <IsBold>False</IsBold>
                   <IsItalic>False</IsItalic>
                   <IsUnderline>False</IsUnderline>
@@ -182,10 +212,25 @@
                 <ColumnName>Column5</ColumnName>
               </DataMappingTextSpan>
               <TextSpan>
-                <Text> </Text>
+                <Text />
                 <FontInfo>
-                  <FontName>Segoe UI</FontName>
-                  <FontSize>11.9</FontSize>
+                  <FontName>Microsoft YaHei UI</FontName>
+                  <FontSize>14.2</FontSize>
+                  <IsBold>False</IsBold>
+                  <IsItalic>False</IsItalic>
+                  <IsUnderline>False</IsUnderline>
+                  <FontBrush>
+                    <SolidColorBrush>
+                      <Color A="1" R="0" G="0" B="0"></Color>
+                    </SolidColorBrush>
+                  </FontBrush>
+                </FontInfo>
+              </TextSpan>
+              <TextSpan>
+                <Text>, </Text>
+                <FontInfo>
+                  <FontName>Arial Rounded MT</FontName>
+                  <FontSize>14.2</FontSize>
                   <IsBold>False</IsBold>
                   <IsItalic>False</IsItalic>
                   <IsUnderline>False</IsUnderline>
@@ -197,10 +242,10 @@
                 </FontInfo>
               </TextSpan>
               <DataMappingTextSpan>
-                <Text>98802-9504</Text>
+                <Text>US</Text>
                 <FontInfo>
-                  <FontName>Segoe UI</FontName>
-                  <FontSize>11.9</FontSize>
+                  <FontName>Arial Rounded MT</FontName>
+                  <FontSize>14.2</FontSize>
                   <IsBold>False</IsBold>
                   <IsItalic>False</IsItalic>
                   <IsUnderline>False</IsUnderline>
@@ -212,13 +257,41 @@
                 </FontInfo>
                 <ColumnName>Column6</ColumnName>
               </DataMappingTextSpan>
-            </LineTextSpan>
-            <LineTextSpan>
-              <DataMappingTextSpan>
-                <Text>US</Text>
+              <TextSpan>
+                <Text />
                 <FontInfo>
-                  <FontName>Segoe UI</FontName>
-                  <FontSize>11.9</FontSize>
+                  <FontName>Microsoft YaHei UI</FontName>
+                  <FontSize>14.2</FontSize>
+                  <IsBold>False</IsBold>
+                  <IsItalic>False</IsItalic>
+                  <IsUnderline>False</IsUnderline>
+                  <FontBrush>
+                    <SolidColorBrush>
+                      <Color A="1" R="0" G="0" B="0"></Color>
+                    </SolidColorBrush>
+                  </FontBrush>
+                </FontInfo>
+              </TextSpan>
+              <TextSpan>
+                <Text />
+                <FontInfo>
+                  <FontName>Arial Rounded MT</FontName>
+                  <FontSize>14.2</FontSize>
+                  <IsBold>False</IsBold>
+                  <IsItalic>False</IsItalic>
+                  <IsUnderline>False</IsUnderline>
+                  <FontBrush>
+                    <SolidColorBrush>
+                      <Color A="1" R="0" G="0" B="0"></Color>
+                    </SolidColorBrush>
+                  </FontBrush>
+                </FontInfo>
+              </TextSpan>
+              <DataMappingTextSpan>
+                <Text>53172</Text>
+                <FontInfo>
+                  <FontName>Arial Rounded MT</FontName>
+                  <FontSize>14.2</FontSize>
                   <IsBold>False</IsBold>
                   <IsItalic>False</IsItalic>
                   <IsUnderline>False</IsUnderline>
@@ -234,12 +307,12 @@
           </FormattedText>
           <ObjectLayout>
             <DYMOPoint>
-              <X>0.2464863</X>
-              <Y>0.1314484</Y>
+              <X>0.23</X>
+              <Y>0.06166657</Y>
             </DYMOPoint>
             <Size>
-              <Width>3.007027</Width>
-              <Height>0.9156964</Height>
+              <Width>3.19</Width>
+              <Height>0.9666667</Height>
             </Size>
           </ObjectLayout>
         </TextObject>
@@ -259,22 +332,76 @@
     </Columns>
     <Rows>
       <DataRow>
-        <Value>Mary Haehl</Value>
-        <Value>512 32nd St Nw</Value>
-        <Value />
-        <Value>E Wenatchee</Value>
-        <Value>WA</Value>
-        <Value>98802-9504</Value>
+        <Value>Sonila Papa</Value>
+        <Value>1301 college avenue</Value>
+        <Value>Unit 3F</Value>
+        <Value>SOUTH MILWAUKEE</Value>
+        <Value>WI</Value>
         <Value>US</Value>
+        <Value>53172</Value>
       </DataRow>
       <DataRow>
-        <Value>Fella Hadj Kaddour</Value>
-        <Value>6939 avenue Bloomfield</Value>
-        <Value>Apt 8</Value>
-        <Value>Montréal</Value>
-        <Value>QC</Value>
-        <Value>H3N 2G7</Value>
+        <Value>Mariah King</Value>
+        <Value>3501 Newfield rd</Value>
+        <Value />
+        <Value>Nanaimo</Value>
+        <Value>BC</Value>
         <Value>CA</Value>
+        <Value>V9S5V6</Value>
+      </DataRow>
+      <DataRow>
+        <Value>Grainne Hill</Value>
+        <Value>1080 Pacific Street</Value>
+        <Value>#204</Value>
+        <Value>Vancouver</Value>
+        <Value>BC</Value>
+        <Value>CA</Value>
+        <Value>V6E 4C2</Value>
+      </DataRow>
+      <DataRow>
+        <Value>Tiffany McKinney</Value>
+        <Value>303 Janie Lane</Value>
+        <Value>None</Value>
+        <Value>New Albany</Value>
+        <Value>IN</Value>
+        <Value>US</Value>
+        <Value>47150</Value>
+      </DataRow>
+      <DataRow>
+        <Value>Sierra Wolfe</Value>
+        <Value>125 McKay Ave</Value>
+        <Value>1</Value>
+        <Value>Windsor</Value>
+        <Value>ON</Value>
+        <Value>CA</Value>
+        <Value>N9B1Z3</Value>
+      </DataRow>
+      <DataRow>
+        <Value>Kathleen Donna MOORE d/b/a KFM Consulting Services</Value>
+        <Value>36 Applewood Drive</Value>
+        <Value>C</Value>
+        <Value>Brantford</Value>
+        <Value>ON</Value>
+        <Value>CA</Value>
+        <Value>N3R 5X4</Value>
+      </DataRow>
+      <DataRow>
+        <Value>Kendra Calder</Value>
+        <Value>250 Strathford Crescent</Value>
+        <Value>None</Value>
+        <Value>Strathmore</Value>
+        <Value>AB</Value>
+        <Value>CA</Value>
+        <Value>T1p 1n9</Value>
+      </DataRow>
+      <DataRow>
+        <Value>TIEN STRAUSS</Value>
+        <Value>16 JONDAN CRESCENT</Value>
+        <Value />
+        <Value>THORNHILL</Value>
+        <Value>ON</Value>
+        <Value>CA</Value>
+        <Value>L3T 3Z5</Value>
       </DataRow>
     </Rows>
   </DataTable>

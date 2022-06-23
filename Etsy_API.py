@@ -7,6 +7,7 @@ import webbrowser
 import datetime
 import sys
 import os
+import openpyxl
 from DataProcessor import *
 
 redirect_uri = "https://localhost:8000"
@@ -371,6 +372,70 @@ class Etsy_API:
         DataProcessor.writeToFile(inventoryData, writeType='w', inputFile='data_file/'+self.__shop_name+'_data_summary.csv')
 
 ###############################################################################
+    def updateSummaryFile(self):
+        if not os.path.isfile('data_file/'+self.__shop_name+'_data_summary.csv'):
+            print('data file doesn\'t exist, aborting function')
+            return
+        newHeader, newData = DataProcessor.readInFile('data_file/'+self.__shop_name+'_data_summary.csv')
+        
+        outputfile = self.__shop_name+'_summary.xlsx'
+        wb = openpyxl.workbook.Workbook()
+        page = wb.active
+        Date = datetime.datetime.now().strftime("%m-%d") 
+        #if output file doens't exist, modify new data file into output file format
+        if not os.path.isfile(outputfile):
+            page.append(["Item Name","Unit","Specs",Date,"Current Stock"])
+            for row in newData:
+                page.append(row)
+
+        #if there is an existing output file, append new data to it
+        else:
+            #read in existing file as 2D list then store into a dict
+            oldHeader, oldData = DataProcessor.readInFile(outputfile)
+            dataDict = {}
+            #remove empty cells at the end of row captured by python
+            head = []
+            for item in oldHeader:
+                if item != None and item != " ":
+                    head.append(item)
+            oldHeader = head
+            
+            for data in oldData:
+                key = tuple([data[0],data[1],data[2]]) #name and spec as key
+                values=[]
+                #remove empty cells at the end of a row that was captured by python
+                for val in data[3:]:
+                    if val != None and val != " ":
+                        values.append(val)
+                dataDict[key] = values #store rest of data as values
+
+            #add new data to dict
+            for data in newData:
+                key = tuple([data[0].strip("\""),data[4],data[1]])
+                if key in dataDict:
+                    newVal = dataDict[key]
+                    newVal.extend(data[2:4])
+                    dataDict[key]= newVal
+                    print("matched"+key[0])
+                #if item is not in dict, create a new row for it with appropriate spaces in front
+                else:
+                    newVal = ["0" for i in range(len(oldData[0])-3)]
+                    newVal.extend(data[2:4])
+                    dataDict[key] = newVal
+                    print("NO")
+            
+            #update header and write header and data to file
+            oldHeader.extend([Date,"Current Stock"])
+            page.append(oldHeader)
+            for key,val in dataDict.items():
+                values = [key[0],key[1],key[2]]
+                values.extend([v for v in val])
+                page.append(values)
+        
+        wb.save(filename=outputfile)
+            
+                
+###############################################################################
     #get new and unshipped order from Etsy and pass it to another function to
     #generate template for creating shipping labels and output file of 
     #receipt data in etsy_receipt_data.csv.
@@ -543,7 +608,11 @@ class Etsy_API:
             if not order["status"]:
                 print("customer %s hasn't paid, skipping his/her shipment label generation"%(order["name"]))
                 break;
-            label.append([order["name"],order["first_line"],order["second_line"],order["city"],order["state"],order["zip"],order["country_iso"]])
+            content = [order["name"],order["first_line"],order["second_line"],order["city"],order["state"],order["country_iso"],order["zip"]]
+            #if address 2 field is explicity written as None, replace it with a space
+            if content[2] == None:
+                content[2] = " "
+            label.append(content)
         DataProcessor.writeToFile(label,writeType='a',inputFile='stamp_label.csv')
 
 ###############################################################################

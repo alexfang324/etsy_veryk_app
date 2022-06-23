@@ -107,6 +107,11 @@ class Verykship_API:
         action="shipment/create" #action specified in veryk API
         timestamp, signature = self.generateSignature(action)
         
+        #if product name is more than 35 char long, truncate it to 35
+        pname = order[29]
+        if len(pname) > 35:
+            pname = pname[:35]
+
         #Prepare JSON to send to server
         data = {"service_id":order[0]}
         data["payment_method"]="account"
@@ -118,7 +123,7 @@ class Verykship_API:
                               "province":order[22],"name":order[14],"mobile_phone":order[16],
                               "address":order[18],"address2":order[19]}
         data["package"]={"type":order[25],"packages":[{"weight":order[26]}]}
-        data["product"]=[{"name":order[29],"qty":order[30],"price":order[31],
+        data["product"]=[{"name":pname,"qty":order[30],"price":order[31],
                                "unit":"EA","origin":"CA"}]
         
         data = json.dumps(data) #convert dictionary to json
@@ -133,7 +138,6 @@ class Verykship_API:
             print(str(orderResponse)+" in createOrder() function")
             sys.exit(orderResponse.text)
         orderJSON = orderResponse.json()
-
         return orderJSON["response"]["id"], orderJSON["response"]["waybill_number"]
 
 ###############################################################################
@@ -167,10 +171,5 @@ class Verykship_API:
         DataProcessor.createPDF(shopName + '_label.pdf',pdfContent)
         DataProcessor.appendPDF(shopName + '_label.pdf','ship_label.pdf')
         DataProcessor.deletePDF(shopName + '_label.pdf')
-        
-        #move current shipment template to cache folder for record delete old cache file
-        filename = shopName + '_label.pdf'
-        if os.path.isfile('app_cache/'+filename):
-            os.remove('app_cache/'+filename)
-        os.rename(filename,'app_cache/'+filename)
+
 
