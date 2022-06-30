@@ -2,9 +2,8 @@ import requests
 import random
 import base64
 import hashlib #used for SHA256 encoding
-import re #regular expression
-import webbrowser
 import datetime
+import html
 import sys
 import os
 import openpyxl
@@ -574,7 +573,7 @@ class Etsy_API:
             print(self.__shop_name+':No receipt data is provided to Etsy_API.updateTracking()')
             return
         
-        print('\n'+self.__shop_name+': Updated tracking for:')
+        print(self.__shop_name+': Updated tracking for:')
         for receipt in receiptData:
             for tracking in trackingData:
                 if tracking[1:3]==receipt[1:3]:
@@ -594,7 +593,7 @@ class Etsy_API:
                         print(str(updateResponse)+" occured when updating tracking for client %s in the updateTracking function"%(tracking[1].upper()))
                         print(updateResponse.text)
                         return None
-        print(self.__shop_name+': Tracking Updated')
+        print('\n')
 
 ###############################################################################
     #takes a etsy order JSON and writes need shipping information to a csv file
@@ -609,7 +608,18 @@ class Etsy_API:
             if not order["status"]:
                 print("customer %s hasn't paid, skipping his/her shipment label generation"%(order["name"]))
                 break;
-            content = [order["name"],order["first_line"],order["second_line"],order["city"],order["state"],order["country_iso"],order["zip"]]
+            name = html.unescape(order["name"]).upper() #get html decoded buyer name
+           
+            #Make sure multiple order from the same buyer will generate only one label
+            personInfo = tuple([name,order["zip"]])
+            if personInfo in personSet:
+                continue #person already placed an order, do not generate another label, move on to next order
+            personSet.add(personInfo)
+
+            #label content
+            firstline = html.unescape(order["first_line"])
+            secondline = html.unescape(order["second_line"]) if order["second_line"] != None else " "
+            content = [name,firstline,secondline,order["city"],order["state"].upper(),order["country_iso"].upper(),order["zip"].upper()]
             #if address 2 field is explicity written as None, replace it with a space
             if content[2] == None:
                 content[2] = " "
