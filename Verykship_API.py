@@ -82,9 +82,10 @@ class Verykship_API:
         trackingData = [["tracking_id","name","zipcode"]]
         for order in orderData:
             orderID, trackNum = self.createOrder(order)
-            orderIDs.append(orderID)
-            #append trackNum, Name, zipcode
-            trackingData.append([trackNum,order[14],order[24]])
+            if orderID != None and trackNum != None:
+                orderIDs.append(orderID)
+                #append trackNum, Name, zipcode
+                trackingData.append([trackNum,order[14],order[24]])
       
         #move current shipment template to cache folder for record and prevent duplicate
         #order generation by re-running this method again
@@ -138,6 +139,14 @@ class Verykship_API:
             print(str(orderResponse)+" in createOrder() function")
             sys.exit(orderResponse.text)
         orderJSON = orderResponse.json()
+        orderJSON = json.loads(orderJSON) #convert to python dict
+        #if orderJSON exist but has no response field, application will simply move on
+        if "response" not in orderJSON:
+            print("Error occured when creating veryk order for"+order[14])
+            print("orderJSON returned :\n")
+            print(orderJSON)
+            print("Moving on......\n\n")
+            return None, None
         return orderJSON["response"]["id"], orderJSON["response"]["waybill_number"]
 
 ###############################################################################
