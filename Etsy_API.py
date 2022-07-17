@@ -110,6 +110,7 @@ class Etsy_API:
 ###############################################################################
     #Get refresh token
     def getRefreshToken(self):
+        print(self.__shop_name+': Refreshing Access Tokens')
         refreshTokenURL = "https://api.etsy.com/v3/public/oauth/token"       
         data = {"grant_type":"refresh_token",
            "client_id":self.__api_key,
@@ -126,7 +127,7 @@ class Etsy_API:
         self.__access_token = refreshTokenJSON["access_token"]
         self.__refresh_token = refreshTokenJSON["refresh_token"]        
         self.updateRefreshTokenToFile()
-        print(self.__shop_name+': Successfully Retrieving New Access and Refresh Tokens')
+
 ###############################################################################
     #update refresh token to credential file by rewriting the entire file with 
     #appropraite update
@@ -495,14 +496,13 @@ class Etsy_API:
                     nonEligibleOrders.append(order)
             else:
                 sys.exit("Invalid shopName is given in eligibleForTracking function")
-        print(self.__shop_name+': Checked Orders Against Tracking Eligibility')
         return eligibleOrders, nonEligibleOrders
 ###############################################################################
     #Takes an array of shipping information from Etsy and generate a template needed
     #by Veryshipk for batch shipment label creation in veryk_shipment.csv
     def generateVerykTemplate(self, newOrders):
         if not newOrders:
-            print(self.__shop_name+': No eligible tracked order is seen')
+            print(self.__shop_name+': No eligible tracked order')
             return
         
         #dict between ISO-3166 country code and veryshipk courier service code
@@ -558,7 +558,6 @@ class Etsy_API:
                 os.remove('app_cache/'+trackingFile)
             os.rename(trackingFile,'app_cache/'+trackingFile)
         else:
-            print(self.__shop_name+': tracking_data file is not available: nothing to update')
             return
         
         #read in etsy receipt data

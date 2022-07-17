@@ -72,11 +72,10 @@ class Verykship_API:
     #Takes in the Verykship shipping tempalte filename and create shipment
     #order in verykship server. Output veryk_tracking_data.csv file
     def createOrders(self,shopName):
-        print(shopName+': creating veryk orders')
         #if input file is absent
         if not os.path.isfile(shopName + '_verykship_shipment.xlsx'):
-            print(shopName+': Input verykship_shipment.xlsx is not available, no veryk order created')
             return [],[]
+        print(shopName+': creating veryk orders')
         headerData,orderData = DataProcessor.readInFile(shopName + '_verykship_shipment.xlsx')
         orderIDs =[]
         trackingData = [["tracking_id","name","zipcode"]]
@@ -139,7 +138,7 @@ class Verykship_API:
             print(str(orderResponse)+" in createOrder() function")
             sys.exit(orderResponse.text)
         orderJSON = orderResponse.json()
-        orderJSON = json.loads(orderJSON) #convert to python dict
+
         #if orderJSON exist but has no response field, application will simply move on
         if "response" not in orderJSON:
             print("Error occured when creating veryk order for"+order[14])
@@ -173,6 +172,12 @@ class Verykship_API:
                 print(str(labelResponse)+" in getLabel() function")
                 sys.exit(labelResponse.text)
             labelJSON = labelResponse.json()
+            #if there is no response in JSON, we will notify user and move on
+            if "response" not in labelJSON:
+                print("Error occured when getting ship label for order ID: "+orderID)
+                print("label JSON returned :\n")
+                print(labelJSON)
+                print("Moving on......\n\n")
             b64Label = labelJSON["response"]["label"]
             pdfContent.append(b64Label)
             

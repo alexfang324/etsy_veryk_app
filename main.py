@@ -17,13 +17,14 @@ kobj = Verykship_API()
 # sparkleland.getSummary()
 
 #Get and create Shipment
+sparkleland.moveToCacheFolder() #only need to be called once by either Etsy object
 sunmertime.getNewOrders()
 kobj.createOrders('sunmertime')
 sunmertime.updateTracking()
 sparkleland.getNewOrders()
 kobj.createOrders('sparkleland')
 sparkleland.updateTracking()
-sparkleland.moveToCacheFolder() #only need to be called once by either Etsy object
+
 
 
 

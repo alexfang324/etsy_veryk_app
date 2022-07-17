@@ -3,6 +3,8 @@ credential/sunmertime.csv
 credential/veryk.csv
 sparkleland_naming_convention.csv
 sunmertime_naming_convention.csv
+ship_label.pdf
+stamp_label.csv
 data_file/*
 app_cache/*
 template.dymo
