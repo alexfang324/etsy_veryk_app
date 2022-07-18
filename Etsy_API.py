@@ -240,7 +240,7 @@ class Etsy_API:
     #retrieve this month's "ordered item" data from Etsy with queries cap at 100
     #lines at a time. The retrival process stops when a particular query doesn't
     #provide a single line of relevant data. The data is then written to sales_data.csv    
-    def getSalesData(self):
+    def getSalesData(self,targetMonth):
         print(self.__shop_name+': Retrieving Sales Data (sales_data.csv)')
         dataSeen = True #initialize dummy holder to record if relevant data is seen in the particular query
         queryItr = 0 #starting point offset of the http GET data query
@@ -255,14 +255,12 @@ class Etsy_API:
                 print('No data retrieved from getSalesData function')
                 return
             
-            #copy this month's sales data to array
-            thisMonth = datetime.datetime.now().strftime("%m")           
+       
             for i in range(len(salesJSON["results"])):
                 created_timestamp = salesJSON["results"][i]["created_timestamp"] #epoch time
                 salesMonth = datetime.datetime.fromtimestamp(created_timestamp).strftime("%m") #sales month of the transaction
-                
                 #if data belong to this month, copy data to output array
-                if salesMonth == thisMonth:
+                if salesMonth == targetMonth:
                     dataSeen = True #seeing relevant data in this query JSON           
                     time = datetime.datetime.fromtimestamp(created_timestamp).strftime("%Y-%m-%d") #get calander time           
                     title = salesJSON["results"][i]["title"]
@@ -305,7 +303,7 @@ class Etsy_API:
     #a summary file. The file has below column structure:
     #sales_data = ["Sales Date","Item Name","Variation","Quantity"]
     #inventory_data = ["Item Name","Variation","Quantity"]
-    #output array = ["Item Name","Variation","Sales Quantity","After sale Inventory Quantity", "Unit]
+    #output array = ["Item Name","Unit","Variation","Sales Quantity","After sale Inventory Quantity"]
     
     def getSummary(self):
         print(self.__shop_name+': Preparing summary File (data_summary.csv)')
@@ -324,7 +322,7 @@ class Etsy_API:
         invVarInd = inventoryHeader.index("Variations")
 
         #find package quantity hidden in "Variations" column and calculate total quantity
-        #output array struct is ["Item Name","Spec", "Quantity", "Unit"]
+        #output array struct is ["Item Name","Unit", "Spec", "Quantity" ]
         inventoryData = DataProcessor.updateQuantityUsingVariations(inventoryData,invNameInd,invVarInd,invQuanInd,unitWanted,specWanted)
 
         ################################
@@ -339,7 +337,7 @@ class Etsy_API:
         salesVarInd = salesHeader.index("Variations")
 
         #find package quantity hidden in "Variations" column and calculate total quantity
-        #output array struct is ["Item Name","Spec", "Quantity", "Unit"]
+        #output array struct is ["Item Name","Unit", "Spec", "Quantity" ]
         salesData = DataProcessor.updateQuantityUsingVariations(salesData,salesNameInd,salesVarInd,salesQuanInd,unitWanted,specWanted)
 
         #insert sales quantity to corresponding row of inventory data
@@ -347,27 +345,28 @@ class Etsy_API:
             matched = False #record if we see a match
             for j in range(len(salesData)):
                 #check if they have same name and spec
-                if inventoryData[i][0:2] == salesData[j][0:2]:
+                if inventoryData[i][0] == salesData[j][0] and inventoryData[i][2] == salesData[j][2]:
                     #check if they have the same units
-                    if not inventoryData[i][-1] == salesData[j][-1]:
+                    if not inventoryData[i][1] == salesData[j][1]:
                         print('getSummary(): below inventory and sales item parsed from inventory_data.csv and sales_data.csv'
                               ', respectively, have different units. Will not update sales quantitiy of this item')
                         print('\n',inventoryData[i])
                         print('\n',salesData[j])
                         break
                     matched = True
-                    inventoryData[i].insert(2,salesData[j][2])
+
+                    inventoryData[i].insert(3,salesData[j][3])
                     salesData.pop(j) #remove salesData that has been recorded
                     break
-            #if no match is found  
+            #if an inventory item as no sales, insert a space  
             if not matched:
-                inventoryData[i].insert(2,'') #insert blank sale quantity for current inventory
+                inventoryData[i].insert(3,'0') #insert blank sale quantity for current inventory
         #if there is order sold that had its listing deleted we will append to the end of file
         if salesData:
             for data in salesData:
-                inventoryData.append([data[0],data[1],data[2],0,data[3]])
+                inventoryData.append([data[0],data[1],data[2],data[3],0])
         #append header to data and write to file
-        newHeader = ["Item Name", "Specs", "Sales Quantity", "Aft. Sale Inventory Quantity", "Unit"]
+        newHeader = ["Item Name", "Unit","Specs", "Sales Quantity", "Aft. Sale Inventory Quantity"]
         inventoryData = [newHeader] + inventoryData
         DataProcessor.writeToFile(inventoryData, writeType='w', inputFile='data_file/'+self.__shop_name+'_data_summary.csv')
 
@@ -375,26 +374,33 @@ class Etsy_API:
     #THIS FUNCTION IS NOT COMPLETE, STILL HAS BUG
     def updateSummaryFile(self):
         if not os.path.isfile('data_file/'+self.__shop_name+'_data_summary.csv'):
-            print('data file doesn\'t exist, aborting function')
+            print('input data file doesn\'t exist, aborting function')
             return
         newHeader, newData = DataProcessor.readInFile('data_file/'+self.__shop_name+'_data_summary.csv')
         
-        outputfile = self.__shop_name+'_summary.xlsx'
+        #remove double quote in item name and make sure vals are int instead of str when
+        #written to xlsx file
+        for data in newData:
+            data[0]=data[0].strip("\"")
+            data[3]=int(data[3])
+            data[4]=int(data[4])
+        
+        outputfile = 'data_file/'+self.__shop_name+'_summary_file.xlsx'
         wb = openpyxl.workbook.Workbook()
         page = wb.active
         Date = datetime.datetime.now().strftime("%m-%d") 
         #if output file doens't exist, modify new data file into output file format
         if not os.path.isfile(outputfile):
             page.append(["Item Name","Unit","Specs",Date,"Current Stock"])
-            for row in newData:
-                page.append(row)
+            for data in newData:
+                page.append(data)
 
         #if there is an existing output file, append new data to it
         else:
             #read in existing file as 2D list then store into a dict
             oldHeader, oldData = DataProcessor.readInFile(outputfile)
             dataDict = {}
-            #remove empty cells at the end of row captured by python
+            #remove empty cells at the end of each row captured by python
             head = []
             for item in oldHeader:
                 if item != None and item != " ":
@@ -402,7 +408,10 @@ class Etsy_API:
             oldHeader = head
             
             for data in oldData:
-                key = tuple([data[0],data[1],data[2]]) #name and spec as key
+                #filter out empty row with no item name
+                if data[0] =='' or data[0]==None:
+                    continue
+                key = tuple(data[0:3]) #name, unit, and spec as key
                 values=[]
                 #remove empty cells at the end of a row that was captured by python
                 for val in data[3:]:
@@ -412,23 +421,24 @@ class Etsy_API:
 
             #add new data to dict
             for data in newData:
-                key = tuple([data[0].strip("\""),data[4],data[1]])
+                #filter out empty row with no item name
+                if data[0] =='' or data[0]==None:
+                    continue
+                key = tuple(data[0:3])
                 if key in dataDict:
                     newVal = dataDict[key]
-                    newVal.extend(data[2:4])
-                    dataDict[key]= newVal
-                    print("matched"+key[0])
-                #if item is not in dict, create a new row for it with appropriate spaces in front
-                else:
-                    newVal = ["0" for i in range(len(oldData[0])-3)]
-                    newVal.extend(data[2:4])
+                    newVal.extend(data[3:5])
                     dataDict[key] = newVal
-                    print("NO")
+                #if item is not in dict, create a new row for it with -1 in front
+                else:
+                    newVal = [-1]*(len(oldHeader)-3)
+                    newVal.extend(data[3:5])
+                    dataDict[key] = newVal
             
             #update header and write header and data to file
             oldHeader.extend([Date,"Current Stock"])
             page.append(oldHeader)
-            for key,val in dataDict.items():
+            for key,val in sorted(dataDict.items()):
                 values = [key[0],key[1],key[2]]
                 values.extend([v for v in val])
                 page.append(values)

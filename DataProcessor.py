@@ -114,7 +114,7 @@ class DataProcessor:
     #the Ind variables are the column index to the name, varaiations and quantity value
     #of the data array. unitWanted and specWanted provide keywords used to search
     #per pack quantity and product spec
-    #Output Array = [Item Name, Specs, Total Quantity, Unit]
+    #Output Array = [Item Name, Unit, Specs, Total Quantity]
     @staticmethod
     def updateQuantityUsingVariations(data,nameInd,varInd,quanInd,unitWanted,specWanted):
         
@@ -134,7 +134,7 @@ class DataProcessor:
                         row.extend([str(totQuantity),unit]) #append to end of row
                         break
                 if not parsedNum: #if no per package quantity unit is found in Variations field
-                    row.extend([row[quanInd],'N/A'])
+                    row.extend([row[quanInd],'order'])
 
              
         #############################
@@ -166,7 +166,12 @@ class DataProcessor:
         #convert python dictionary back into array
         content = []
         for key, val in accuData.items():
-            content.append([key[0],' '.join(key[1:-1]).strip(),str(val),key[-1]]) #strip() takes away white space on either end of string
+            #name, unit, string of spec, quantity
+            outputSpec = ' '.join(key[1:-1]).strip() #strip() takes away white space on either end of string
+            #if there is no spec infomration, use N/A
+            if outputSpec == '':
+                outputSpec = 'N/A'
+            content.append([key[0],key[-1],outputSpec,str(val)]) 
         content.sort(key = lambda c: (c[0], c[1])) #sort by first column then sort by second column
         return content
 

@@ -10,20 +10,22 @@ kobj = Verykship_API()
 
 #Retrieve Report
 # sunmertime.getInventory()
-# sunmertime.getSalesData()
+# sunmertime.getSalesData('07')
 # sunmertime.getSummary()
+# sunmertime.updateSummaryFile()
 # sparkleland.getInventory()
-# sparkleland.getSalesData()
+# sparkleland.getSalesData('07')
 # sparkleland.getSummary()
+# sparkleland.updateSummaryFile()
 
 #Get and create Shipment
-sparkleland.moveToCacheFolder() #only need to be called once by either Etsy object
-sunmertime.getNewOrders()
-kobj.createOrders('sunmertime')
-sunmertime.updateTracking()
-sparkleland.getNewOrders()
-kobj.createOrders('sparkleland')
-sparkleland.updateTracking()
+# sparkleland.moveToCacheFolder() #only need to be called once by either Etsy object
+# sunmertime.getNewOrders()
+# kobj.createOrders('sunmertime')
+# sunmertime.updateTracking()
+# sparkleland.getNewOrders()
+# kobj.createOrders('sparkleland')
+# sparkleland.updateTracking()
 
 
 
